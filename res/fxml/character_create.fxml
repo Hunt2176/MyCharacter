@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="414.0" prefWidth="566.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Accordion layoutX="312.0" layoutY="8.0" prefHeight="54.0" prefWidth="603.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
+        <panes>
+            <TitledPane animated="false" text="Base Skills">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView fx:id="baseSkillList" layoutX="182.0" layoutY="29.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0" />
+                        <CheckBox fx:id="usesBaseSkillsCheckBox" layoutX="14.0" layoutY="5.0" mnemonicParsing="false" text="Uses Base Skills as Skills" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
+          <TitledPane animated="false" text="Proficiencies">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="271.0">
+                     <children>
+                        <ListView fx:id="profList" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+                        <Button fx:id="addProfButton" mnemonicParsing="false" text="Add" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ComboBox fx:id="skillSelectCombo" layoutX="270.4" layoutY="20.4" prefHeight="27.0" prefWidth="211.0" AnchorPane.leftAnchor="260.0" AnchorPane.topAnchor="0.0" />
+                        <TextField fx:id="profBonus" layoutX="90.0" layoutY="10.0" promptText="Bonus" AnchorPane.leftAnchor="54.0" AnchorPane.topAnchor="0.0" />
+                        <Button fx:id="createSetButton" layoutX="491.0" layoutY="10.0" mnemonicParsing="false" text="Create" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children></AnchorPane>
+            </content>
+          </TitledPane>
+          <TitledPane animated="false" text="Gauges">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView fx:id="gaugeList" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.400000000000006" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+                        <Button fx:id="addGaugeButton" mnemonicParsing="false" text="Add" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children></AnchorPane>
+            </content>
+          </TitledPane>
+        </panes>
+      </Accordion>
+      <TextField fx:id="charName" layoutX="14.0" layoutY="14.0" promptText="Character Name" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="68.0" AnchorPane.topAnchor="8.0" />
+      <TextField fx:id="charAC" layoutX="8.0" layoutY="43.0" promptText="Character AC" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="68.0" AnchorPane.topAnchor="40.0" />
+      <Button fx:id="saveButton" layoutX="523.0" layoutY="14.0" mnemonicParsing="false" text="Save" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0" />
+      <Button fx:id="loadButton" layoutX="530.0" layoutY="40.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="48.0" text="Edit" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="40.0" />
+      <ComboBox fx:id="diceTypeCombo" layoutX="8.0" layoutY="93.0" prefWidth="150.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="90.0" />
+      <Label layoutX="8.0" layoutY="76.0" text="Rolls with" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="72.0" />
+   </children>
+</AnchorPane>

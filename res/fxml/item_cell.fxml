@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="itemQuantButton" mnemonicParsing="false" text="999" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="4.0" />
+      <Label fx:id="itemName" text="itemName" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0" />
+   </children>
+</AnchorPane>
