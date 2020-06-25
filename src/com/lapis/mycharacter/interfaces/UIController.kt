@@ -5,6 +5,7 @@ import javafx.scene.Scene
 import javafx.fxml.FXMLLoader
 import javafx.stage.Modality
 import javafx.stage.Stage
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -179,13 +180,29 @@ abstract class UIController(private var stage: Stage?): FXMLLoadable
      */
     fun initialize()
     {
-        stage?.setOnShown { onStart() }
-        stage?.setOnHidden { onHidden() }
-        stage?.setOnCloseRequest { onClose() }
-        stage?.focusedProperty()?.addListener { observable, oldValue, newValue ->
-            onFocusChange(newValue)
+        stage?.setOnShown {
+            try {
+                onStart()
+            } catch (e: Exception){}
         }
-        onCreate()
+        stage?.setOnHidden {
+            try {
+                onHidden()
+            } catch (e: Exception){}
+        }
+        stage?.setOnCloseRequest {
+            try {
+                onClose()
+            } catch (e: Exception){}
+        }
+        stage?.focusedProperty()?.addListener { observable, oldValue, newValue ->
+            try {
+                onFocusChange(newValue)
+            } catch (e: Exception){}
+        }
+        try {
+            onCreate()
+        } catch (e: Exception){}
     }
 
     override fun loadFXML()
