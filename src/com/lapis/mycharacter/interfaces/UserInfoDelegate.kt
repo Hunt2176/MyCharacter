@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 interface UserInfoDelegate
 {
-    val userInfo: DatabaseUser
+    var userInfo: DatabaseUser
     val saveFile: File
 
     val userId: String
@@ -21,6 +21,10 @@ interface UserInfoDelegate
 
     val characters: Collection<DNDCharacter>
         get() = userInfo.characters
+
+    var autoSyncEnabled: Boolean
+        get() = userInfo.autoSyncEnabled
+        set(value) { userInfo.autoSyncEnabled = value }
 
     fun writeCharacter(character: DNDCharacter)
     {

@@ -397,7 +397,7 @@ enum class DNDBaseAttribute
             Hit -> DNDBaseSkill.Strength
             CombatStress -> DNDBaseSkill.Constitution
             Interaction -> DNDBaseSkill.Charisma
-            Coordination -> DNDBaseSkill.Intelligence
+            Coordination -> DNDBaseSkill.Dexterity
             Tech -> DNDBaseSkill.Intelligence
             Athletics -> DNDBaseSkill.Strength
             Perception -> DNDBaseSkill.Wisdom
@@ -414,6 +414,7 @@ enum class DNDDice(val sides: Int)
 {
     d4(4),
     d6(6),
+    d8(8),
     d10(10),
     d12(12),
     d20(20),
@@ -426,6 +427,7 @@ enum class DNDDice(val sides: Int)
                 {
                     4 -> d4
                     6 -> d6
+                    8 -> d8
                     10 -> d10
                     12 -> d12
                     20 -> d20

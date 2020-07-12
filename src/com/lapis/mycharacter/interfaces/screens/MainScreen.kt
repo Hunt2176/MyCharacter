@@ -16,7 +16,7 @@ class MainScreen(stage: Stage?): UIController(stage), CharacterLoader, DiceHisto
     override val diceHistory: ArrayList<DiceRoll> = arrayListOf()
 
     override var saveFile: File = File("characters")
-    override val userInfo = DatabaseUser.createOrRead(saveFile)
+    override var userInfo = DatabaseUser.createOrRead(saveFile)
     {
         AlertBuilder(Alert.AlertType.ERROR)
             .setTitle("Save File Error")
@@ -133,6 +133,7 @@ class MainScreen(stage: Stage?): UIController(stage), CharacterLoader, DiceHisto
         sortSkillsChoice.setOnAction {
             sortAttributes(sortSkillsChoice.selectionModel.selectedItem)
         }
+        sortSkillsChoice.selectionModel.select(0)
 
         gaugeList.cellFactory = CustomListCellFactory.createFactory(GaugeCell().javaClass)
         { cell ->
@@ -271,6 +272,7 @@ class MainScreen(stage: Stage?): UIController(stage), CharacterLoader, DiceHisto
         if (isFocused)
         {
             loadQuickSelectMenu()
+            setTitle("My Character - User: ${userInfo.userId}")
         }
     }
 

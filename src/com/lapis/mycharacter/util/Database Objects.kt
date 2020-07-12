@@ -1,7 +1,11 @@
 package com.lapis.mycharacter.util
 
 import com.google.gson.Gson
+import com.google.gson.internal.LinkedTreeMap
+import com.google.gson.reflect.TypeToken
 import com.lapis.mycharacter.DNDCharacter
+import com.lapis.mycharacter.interfaces.AlertBuilder
+import javafx.scene.control.Alert
 import org.apache.http.client.methods.*
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.HttpClientBuilder
@@ -10,13 +14,13 @@ import java.net.URL
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.time.LocalDateTime
+import java.util.HashMap
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.Exception
 
-class DatabaseUser(userId: String, syncDate: LocalDateTime = LocalDateTime.now(), characters: ArrayList<DNDCharacter> = arrayListOf()) 
+class DatabaseUser(userId: String, syncDate: LocalDateTime = LocalDateTime.now(), characters: ArrayList<DNDCharacter> = arrayListOf(), autoSyncEnabled: Boolean = false)
 {
-    private var baseInfo: CharacterUserStorable =
-        CharacterUserStorable(urlEncodeString(userId), syncDate, characters)
+    private var baseInfo: CharacterUserStorable = CharacterUserStorable(userId, syncDate, ArrayList(characters), autoSyncEnabled)
 
     val userId: String
         get() = baseInfo.userId
@@ -32,6 +36,15 @@ class DatabaseUser(userId: String, syncDate: LocalDateTime = LocalDateTime.now()
 
     var saveFile: File? = null
 
+    var autoSyncEnabled = autoSyncEnabled
+    set(value) {
+        field = value
+        baseInfo.autoSyncEnabled = value
+
+        saveToFile()
+        if (value) push()
+    }
+
     private fun urlEncodeString(string: String): String
             = URLEncoder.encode(string, "UTF-8")
 
@@ -40,10 +53,10 @@ class DatabaseUser(userId: String, syncDate: LocalDateTime = LocalDateTime.now()
 
     fun setUserId(new: String, onResult: ((ConnectionResult) -> Unit)? = null) {
         val oldId = baseInfo.userId
-        baseInfo.userId = urlEncodeString(new)
+        val newId = new
 
         AsyncDispatchQueue {
-            DatabaseUser(userId).pull { connectionResult, characterUserResult ->
+            DatabaseUser(urlEncodeString(newId)).pull { connectionResult, characterUserResult ->
                 if (characterUserResult.characters?.size ?: -1 > 0)
                 {
                     onResult?.invoke(ConnectionResult.Error
@@ -52,8 +65,9 @@ class DatabaseUser(userId: String, syncDate: LocalDateTime = LocalDateTime.now()
                             warning = ConnectionResult.WarningMessage.UserExists
                         })
                     it.halt()
-                    baseInfo.userId = oldId
                 }
+                else
+                    baseInfo.userId = newId
             }
         }
             .then { handler ->
@@ -67,7 +81,7 @@ class DatabaseUser(userId: String, syncDate: LocalDateTime = LocalDateTime.now()
             } }
             .then { handler ->
 
-                if (!createDeleteRequest(URL("https://my-character-7ab0f.firebaseio.com/users/$oldId.json")).isSuccess())
+                if (!createDeleteRequest(URL("$baseUrl/${urlEncodeString(oldId)}.json")).isSuccess())
                 {
                     handler.halt()
                     baseInfo.userId = oldId
@@ -75,7 +89,9 @@ class DatabaseUser(userId: String, syncDate: LocalDateTime = LocalDateTime.now()
                 }
             }
             .then { saveToFile() }
-            .then { onResult?.invoke(ConnectionResult.Success) }
+            .then {
+                onResult?.invoke(ConnectionResult.Success)
+            }
             .start()
     }
 
@@ -114,11 +130,14 @@ class DatabaseUser(userId: String, syncDate: LocalDateTime = LocalDateTime.now()
         baseInfo.characters.add(character)
 
         saveToFile()
+        if (autoSyncEnabled) push()
     }
 
     fun removeCharacter(characterId: Int) {
         baseInfo.characters.removeIf { it.characterId == characterId }
+
         saveToFile()
+        if (autoSyncEnabled) push()
     }
 
     fun removeCharacter(character: DNDCharacter) {
@@ -180,24 +199,49 @@ class DatabaseUser(userId: String, syncDate: LocalDateTime = LocalDateTime.now()
             toReturn.saveToFile(file)
             return toReturn.apply { saveFile = file }
         }
+
+        fun getUserList(onResult: (Collection<DatabaseUser>) -> Unit)
+        {
+            val url = URL("$baseUrl.json")
+            AsyncDispatchQueue {
+                try
+                {
+                    val returnedText = url.readText()
+                    var result = arrayListOf<DatabaseUser>()
+                    if (returnedText != "null")
+                    {
+                        var x = (GsonUtility().gson.fromJson(returnedText, TypeNotices.databaseUserType) as HashMap<String, CharacterUserStorable>)
+                        onResult(x.map { it.value.createDatabaseUser() })
+                    }
+                    else onResult(result)
+                }
+                catch (e: Exception)
+                {
+                    e.printStackTrace()
+                }
+            }
+                .start()
+        }
     }
 }
 
 
-private data class CharacterUserStorable(var userId: String,
-                                         var syncDate: LocalDateTime,
-                                         var characters: ArrayList<DNDCharacter>)
+private data class CharacterUserStorable(var userId: String = "Unknown",
+                                         var syncDate: LocalDateTime = LocalDateTime.now(),
+                                         var characters: ArrayList<DNDCharacter> = arrayListOf(),
+                                         var autoSyncEnabled: Boolean = false)
 {
     fun createConsumable(): CharacterUserResult
-        = CharacterUserResult(userId, syncDate, characters)
+        = CharacterUserResult(userId, syncDate, characters, autoSyncEnabled)
 
     fun createDatabaseUser(): DatabaseUser
-        = DatabaseUser(userId, syncDate, characters)
+        = DatabaseUser(userId, syncDate, characters, autoSyncEnabled)
 }
 
 data class CharacterUserResult(val userId: String,
                                val syncDate: LocalDateTime?,
-                               val characters: ArrayList<DNDCharacter>?)
+                               val characters: ArrayList<DNDCharacter>?,
+                               val autoSyncEnabled: Boolean = false)
 
 
 enum class ConnectionResult

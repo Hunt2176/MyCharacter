@@ -6,10 +6,7 @@ import com.lapis.mycharacter.interfaces.UserInfoDelegate
 import com.lapis.mycharacter.util.AsyncDispatchQueue
 import com.lapis.mycharacter.util.ConnectionResult
 import javafx.fxml.FXML
-import javafx.scene.control.Alert
-import javafx.scene.control.Button
-import javafx.scene.control.Label
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import javafx.stage.Stage
 import java.net.URL
 import java.time.Month
@@ -19,6 +16,8 @@ class RemoteManagerScreen(stage: Stage, val userInfoDelegate: UserInfoDelegate):
     @FXML lateinit var userIdInput: TextField
     @FXML lateinit var updateUserId: Button
     @FXML lateinit var labelLastSync: Label
+    @FXML lateinit var btnAutoSync: ToggleButton
+    @FXML lateinit var btnChangeUser: Button
 
     override fun getFxmlLocation(): URL
         = this.javaClass.getResource("/fxml/remote_manager.fxml")
@@ -42,7 +41,7 @@ class RemoteManagerScreen(stage: Stage, val userInfoDelegate: UserInfoDelegate):
                                 AlertBuilder(Alert.AlertType.ERROR)
                                     .setTitle("Error")
                                     .setHeader("Failed to Connect")
-                                    .setContextText("Failed to connected to remote to update User ID")
+                                    .setContextText("Failed to connect to remote to update User ID")
                                     .show()
                             }
                             else if (result == ConnectionResult.Error) runLater {
@@ -52,11 +51,29 @@ class RemoteManagerScreen(stage: Stage, val userInfoDelegate: UserInfoDelegate):
                                     .show()
                             }
                         }
+                        else
+                        {
+                            runLater {
+                                AlertBuilder(Alert.AlertType.INFORMATION)
+                                    .setHeader("Success")
+                                    .setContextText("Successfully updated user id")
+                                    .show()
+                            }
+                        }
                         updateDetails()
                     })
                 }
                     .start()
             }
+        }
+
+        btnAutoSync.isSelected = userInfoDelegate.autoSyncEnabled
+        btnAutoSync.setOnAction {
+            userInfoDelegate.autoSyncEnabled = btnAutoSync.isSelected
+        }
+
+        btnChangeUser.setOnAction {
+            openNewWindow(UserSelector(Stage(), userInfoDelegate), true)
         }
     }
 
