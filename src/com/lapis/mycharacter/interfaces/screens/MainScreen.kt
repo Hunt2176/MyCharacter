@@ -225,7 +225,7 @@ class MainScreen(stage: Stage?): UIController(stage), CharacterLoader, DiceHisto
                 }
                 else
                 {
-                    val window = DiceRoller(Stage(), item.name, character.getDiceSides(),
+                    val window = DiceRoller(Stage(), item.name, item.die?.sides ?: character.getDiceSides(),
                         attribMods[character.characterId]?.get(item) ?: character.getSkillPlus(item))
                         .apply {
                             setTitle(title)

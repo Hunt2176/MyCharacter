@@ -299,8 +299,23 @@ data class DNDItem(var name: String,
                    var quantity: Int = 1,
                    val itemId: Int = ThreadLocalRandom.current().nextInt())
 
-class DNDSkill(var name: String, var base: DNDBaseSkill, val skillId: Int = ThreadLocalRandom.current().nextInt())
+class DNDSkill(var name: String,
+               var base: DNDBaseSkill,
+               val skillId: Int = ThreadLocalRandom.current().nextInt(),
+               var die: DNDDice? = null)
 {
+    private var isBaseSkill = false
+    internal fun setIsBaseSkill(x: Boolean): DNDSkill
+    {
+        isBaseSkill = x
+        return this
+    }
+
+    fun getIsBaseSkill(): Boolean
+    {
+        return isBaseSkill
+    }
+
     override fun toString(): String = name
 }
 
@@ -362,7 +377,7 @@ enum class DNDBaseSkill
 
     fun getSkill(): DNDSkill
     {
-        return DNDSkill(this.name, this, this.ordinal)
+        return DNDSkill(this.name, this, this.ordinal).setIsBaseSkill(true)
     }
 }
 

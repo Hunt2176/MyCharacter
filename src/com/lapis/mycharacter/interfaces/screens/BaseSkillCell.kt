@@ -1,15 +1,14 @@
 package com.lapis.mycharacter.interfaces.screens
 
 import com.lapis.mycharacter.DNDCharacter
+import com.lapis.mycharacter.DNDDice
 import com.lapis.mycharacter.DNDSkill
 import com.lapis.mycharacter.interfaces.CustomFxmlListCell
+import com.lapis.mycharacter.interfaces.CustomListCell
 import com.lapis.mycharacter.interfaces.CustomListCellFactory
 import javafx.fxml.FXML
 import javafx.scene.Node
-import javafx.scene.control.Label
-import javafx.scene.control.ListCell
-import javafx.scene.control.ListView
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import java.net.URL
 
 class BaseSkillCell(val character: DNDCharacter): CustomFxmlListCell<DNDSkill>()
@@ -17,6 +16,7 @@ class BaseSkillCell(val character: DNDCharacter): CustomFxmlListCell<DNDSkill>()
     @FXML lateinit var root: Node
     @FXML lateinit var skillName: Label
     @FXML lateinit var skillLevel: TextField
+    @FXML lateinit var skillDice: ChoiceBox<DNDDice?>
 
     override fun onUpdateItem(item: DNDSkill)
     {
@@ -31,6 +31,13 @@ class BaseSkillCell(val character: DNDCharacter): CustomFxmlListCell<DNDSkill>()
                 else -> skillLevel.text = oldValue
             }
         }
+
+        skillDice.selectionModel.selectedItemProperty().addListener { _, _, newValue -> item.die = newValue }
+
+        val dice: ArrayList<DNDDice?> = arrayListOf(null)
+        dice.addAll(DNDDice.values().toList())
+        skillDice.items.addAll(dice)
+        skillDice.selectionModel.select(item.die)
     }
 
     override fun getRootNode(): Node = root

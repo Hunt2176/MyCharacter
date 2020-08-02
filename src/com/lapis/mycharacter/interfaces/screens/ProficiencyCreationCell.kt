@@ -32,7 +32,7 @@ class ProficiencyCreationCell(val char: DNDCharacter): CustomFxmlListCell<DNDSki
             profSelCombo.selectionModel.select(char.getProficiencies()[index])
         }
 
-        profSelCombo.valueProperty().addListener { observable, oldValue, newValue ->
+        profSelCombo.valueProperty().addListener { _, oldValue, newValue ->
             if (oldValue != null) char.removeProficiency(oldValue)
             if (newValue != null) char.addProficiency(newValue)
         }

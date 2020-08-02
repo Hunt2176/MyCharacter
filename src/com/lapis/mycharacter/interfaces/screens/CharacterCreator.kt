@@ -157,9 +157,7 @@ class CharacterCreator(stage: Stage, val userInfoDelegate: UserInfoDelegate): UI
 
         usesBaseSkillsCheckBox.isSelected = character.getSkills().usesBaseAsSkills
 
-
-
-        baseSkillList.items.addAll(DNDBaseSkill.values().map { it.getSkill() })
+        baseSkillList.items.addAll(character.getSkills().getSkills().filter { it.base.getSkill().skillId == it.skillId })
         gaugeList.items.addAll(character.getGauges())
         profList.items.addAll(character.getProficiencies())
     }
